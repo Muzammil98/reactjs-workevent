@@ -4,7 +4,7 @@ export const getWorkEventsInRange = async (from, to) => {
   try {
     let queryParams = "";
     if (from !== undefined && to !== undefined)
-      queryParams = `?from=${from}&to${to}`;
+      queryParams = `?from=${from}&to=${to}`;
 
     const res = await fetch(BASE_URL + "workevent" + queryParams);
     const data = await res.json();
