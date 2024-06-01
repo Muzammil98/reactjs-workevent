@@ -9,24 +9,24 @@ export default function CalendarComponent() {
   const [events, setEvents] = useState([]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const res = await getWorkEventsInRange(
-        new moment().startOf("month").format("YYYY-MM-DDTHH:mm:ss"),
-        new moment().endOf("month").format("YYYY-MM-DDTHH:mm:ss")
-      );
-
-      setEvents(
-        res.map((item) => ({
-          start: moment(item.startsOn).toDate(),
-          end: moment(item.endsOn).toDate(),
-          title: item.user.firstname + " " + item.user.lastname,
-          data: item,
-        }))
-      );
-    };
-
     fetchData();
   }, []);
+
+  const fetchData = async (newDate = new Date()) => {
+    const res = await getWorkEventsInRange(
+      new moment(newDate).startOf("month").format("YYYY-MM-DDTHH:mm:ss"),
+      new moment(newDate).endOf("month").format("YYYY-MM-DDTHH:mm:ss")
+    );
+
+    setEvents(
+      res.map((item) => ({
+        start: moment(item.startsOn).toDate(),
+        end: moment(item.endsOn).toDate(),
+        title: item.user.firstname + " " + item.user.lastname,
+        data: item,
+      }))
+    );
+  };
 
   const handleSelectEvent = useCallback((event) => {
     console.log("EVENT", event);
@@ -50,6 +50,7 @@ export default function CalendarComponent() {
       endAccessor="end"
       style={{ height: 500 }}
       onSelectEvent={handleSelectEvent}
+      onNavigate={(newDate) => fetchData(newDate)}
     />
   );
 }
